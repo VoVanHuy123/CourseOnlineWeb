@@ -6,10 +6,12 @@ const BASE_URL = "http://localhost:8080/CourseOnline/api/";
 export const endpoints = {
     'categories': '/categories',
     'products': '/products',
-    'register': '/users',
+    'register': '/auth/register',
     'login': '/auth/login',
-    'profile': '/auth/secure/profile',
-    'pay': '/secure/cart'
+    'profile': 'secure/auth/profile',
+    'pay': '/secure/cart',
+    'courses':'/courses',
+    'courses_details':(id)=>`/courses/${id}`,
 }
 
 export const authApis = () => {

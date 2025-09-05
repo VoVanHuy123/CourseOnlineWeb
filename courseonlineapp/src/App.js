@@ -11,6 +11,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import CourseDetails from './components/Course/CourseDetails';
 
 function App() {
   const [user, dispatch] = useReducer(MyUserReducer, null);
@@ -27,6 +28,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/courses/:id" element={<CourseDetails />} />
               {/* <Route path="/cart" element={<Carr />} /> */}
             </Routes>
           {/* </Container> */}

@@ -2,9 +2,10 @@ import { Alert, Button, Card, Col, Container, Form, Row } from "react-bootstrap"
 import MySpinner from "./layout/MySpinner";
 import { useContext, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import Apis, { authApis, endpoints } from "../Configs/Apis"
+import  { endpoints } from "../Configs/Apis"
 import cookie from 'react-cookies'
 import { MyUserContext } from "../Configs/Context";
+import useFetchApi from "../Configs/FetchApi";
 
 const Login = () => {
     const info = [{
@@ -18,11 +19,12 @@ const Login = () => {
     }];
 
     const [user, setUser] = useState({});
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const [err, setErr] = useState();
     const nav = useNavigate();
     const [, dispatch] = useContext(MyUserContext);
     const [q] = useSearchParams();
+    const { loading, fetchApi } = useFetchApi();
 
     const validate = () => {
         if (user.username === '' || user.password === '') {
@@ -36,51 +38,37 @@ const Login = () => {
     const login = async (e) => {
         e.preventDefault();
         if (validate()) {
-            let res = await Apis.post(endpoints['login'], {
-                ...user
-            });
-            console.log("token",res.data.token)
-            cookie.save('token', res.data.token);
 
-            const api = authApis();
-            console.log("Header auth:", api.defaults.headers['Authorization']);
+            const res = await fetchApi({
+                method: "POST",
+                url: endpoints['login'],
+                data: {
+                    ...user
+                }
+            })
+            if (res.status === 200) {
+                cookie.save('token', res.data.token);
+                const u = await fetchApi({
+                    method: "POST",
+                    url: endpoints["profile"],
+                })
+                if (res.status === 200) {
+                    dispatch({
+                        "type": "login",
+                        "payload": u.data
+                    });
+                }
+                let next = q.get('next')
+                nav(next === null ? "/" : next);
+            }
+            else {
+                setErr(res.error)
+            }
 
-            const u = await api.get(endpoints['profile']);
-            console.log("Profile:", u.data);
-            // const u = await authApis().get(endpoints['profile']);
-            // console.log(u.data);
-
-            // dispatch({
-            //     "type": "login",
-            //     "payload": u.data
-            // });
-
-            // console.log(res.data)
-
-            // let next = q.get('next')
-            // nav(next === null ? "/" : next);
         }
     }
 
     return (
-        // <>
-        //     <h1 className="text-center text-success mt-1">ĐĂNG NHẬP NGƯỜI DÙNG</h1>
-
-        //     {err && <Alert variant="danger" className="mt-2">{err}</Alert>}
-
-        //     <Form onSubmit={login}>
-        //         {info.map(i => <Form.Group key={i.field} className="mb-3" controlId={i.field}>
-        //                         <Form.Label>{i.title}</Form.Label>
-        //                         <Form.Control value={user[i.field]} onChange={e => setUser({...user, [i.field]: e.target.value})} type={i.type} placeholder={i.title} required />
-        //                     </Form.Group>)}
-
-        //         {loading?<MySpinner />:<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-        //             <Button variant="success" type="submit">Đăng nhập</Button>
-        //         </Form.Group>}
-
-        //     </Form>
-        // </>
-
 
         <Container
             fluid

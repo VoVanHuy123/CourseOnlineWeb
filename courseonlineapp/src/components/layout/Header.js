@@ -2,14 +2,12 @@ import { Navbar, Nav, Container, Button, Dropdown, Image } from "react-bootstrap
 import { useContext } from "react";
 import { MyUserContext } from "../../Configs/Context";
 import { useNavigate } from "react-router-dom";
-import cookie from "react-cookies";
 
 const Header = () => {
   const [user, dispatch] = useContext(MyUserContext);
   const nav = useNavigate();
 
   const logout = () => {
-    cookie.remove("token");
     dispatch({ type: "logout" });
     nav("/login");
   };
@@ -19,7 +17,7 @@ const Header = () => {
       <Container>
         {/* Logo */}
         <Navbar.Brand
-          href="/"
+          onClick={()=>nav("/")}
           className="fw-bold text-success fs-4"
           style={{ letterSpacing: "1px" }}
         >
@@ -45,7 +43,7 @@ const Header = () => {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item href="/my-courses">📘 Khóa học của tôi</Dropdown.Item>
+                <Dropdown.Item onClick={()=>nav("/")}>📘 Khóa học của tôi</Dropdown.Item>
                 <Dropdown.Divider />
                 <Dropdown.Item onClick={logout} className="text-danger">
                   🚪 Đăng xuất

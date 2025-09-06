@@ -12,6 +12,9 @@ export const endpoints = {
     'pay': '/secure/cart',
     'courses':'/courses',
     'courses_details':(id)=>`/courses/${id}`,
+    'courses_chaters':(id)=>`/secure/chapters?courseId=${id}`,
+    'lesson_detail':(id)=>`/secure/lessons/${id}`,
+    'check_enrollment':(courseId,userId)=>`/secure/check_enrollment?courseId=${courseId}&userId=${userId}`
 }
 
 export const authApis = () => {

@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button, Accordion, ListGroup } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useFetchApi from "../../Configs/FetchApi";
 import { endpoints } from "../../Configs/Apis";
 import defaultCourseImage from "../../assets/image/defaultCourseImg.jpg"
+import { MyUserContext } from "../../Configs/Context";
 
 const CourseDetails = () => {
   const { id } = useParams(); // 👈 lấy id từ URL
   const [course, setCourse] = useState(null);
   const {loading,fetchApi}= useFetchApi();
+  const [user,]=useContext(MyUserContext);
+  const [isHaveEnrollment, setIsHaveEnrollment]=useState(false);
+  const nav = useNavigate();
 
   const loadCourse=async ()=>{
     const res =await fetchApi({
@@ -16,8 +20,21 @@ const CourseDetails = () => {
     })
     if(res.status===200) setCourse(res.data)
   };
+const checkEnrollment = async()=>{
+    if(user?.id) {
+        const res = await fetchApi({
+        url : endpoints['check_enrollment'](id,user.id)
+    })
+    if(res.status===200) setIsHaveEnrollment(true);
+    console.log(endpoints['check_enrollment'](id,user.id))
+    console.log("data",res.data)
+    }
+    
+};
+
   useEffect(()=>{
     loadCourse();
+    checkEnrollment();
   },[])
   if (!course) return <p>Loading...</p>;
 
@@ -70,9 +87,14 @@ const CourseDetails = () => {
             )}
             <Card.Body className="text-center">
               <h5 className="text-danger fw-bold">{course.tuitionFee.toLocaleString()} VNĐ</h5>
-              <Button variant="primary" className="w-100 mb-3">
+              {!isHaveEnrollment ? <Button variant="primary" className="w-100 mb-3">
                 ĐĂNG KÝ HỌC
+              </Button>:
+              <Button variant="success" className="w-100 mb-3" onClick={()=>nav(`/courses/content/${course.id}`)}>
+                VÀO HỌC
               </Button>
+              }
+              
               <ul className="list-unstyled text-start small">
                 <li>📌 Trình độ cơ bản</li>
                 <li>📚 Tổng số {course.chapters?.length || 0} chương</li>

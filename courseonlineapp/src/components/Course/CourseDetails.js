@@ -9,33 +9,33 @@ import { MyUserContext } from "../../Configs/Context";
 const CourseDetails = () => {
   const { id } = useParams(); // 👈 lấy id từ URL
   const [course, setCourse] = useState(null);
-  const {loading,fetchApi}= useFetchApi();
-  const [user,]=useContext(MyUserContext);
-  const [isHaveEnrollment, setIsHaveEnrollment]=useState(false);
+  const { loading, fetchApi } = useFetchApi();
+  const [user,] = useContext(MyUserContext);
+  const [isHaveEnrollment, setIsHaveEnrollment] = useState(false);
   const nav = useNavigate();
 
-  const loadCourse=async ()=>{
-    const res =await fetchApi({
-        url: endpoints['courses_details'](id)
+  const loadCourse = async () => {
+    const res = await fetchApi({
+      url: endpoints['courses_details'](id)
     })
-    if(res.status===200) setCourse(res.data)
+    if (res.status === 200) setCourse(res.data)
   };
-const checkEnrollment = async()=>{
-    if(user?.id) {
-        const res = await fetchApi({
-        url : endpoints['check_enrollment'](id,user.id)
-    })
-    if(res.status===200) setIsHaveEnrollment(true);
-    console.log(endpoints['check_enrollment'](id,user.id))
-    console.log("data",res.data)
+  const checkEnrollment = async () => {
+    if (user?.id) {
+      const res = await fetchApi({
+        url: endpoints['check_enrollment'](id, user.id)
+      })
+      if (res.status === 200) setIsHaveEnrollment(true);
+      console.log(endpoints['check_enrollment'](id, user.id))
+      console.log("data", res.data)
     }
-    
-};
 
-  useEffect(()=>{
+  };
+
+  useEffect(() => {
     loadCourse();
     checkEnrollment();
-  },[])
+  }, [])
   if (!course) return <p>Loading...</p>;
 
   return (
@@ -65,6 +65,16 @@ const checkEnrollment = async()=>{
                       </ListGroup.Item>
                       {/* Nếu sau này có lessons thì map ở đây */}
                     </ListGroup>
+                    {user?.role == "teacher" && <div className="d-flex justify-content-end mt-2">
+                      <Button
+                        variant="success"
+                        size="sm"
+                        onClick={() => nav(`/chapters/${chapter.id}`)}
+                      >
+                        Xem chi tiết
+                      </Button>
+                    </div>}
+                    
                   </Accordion.Body>
                 </Accordion.Item>
               ))}
@@ -87,14 +97,31 @@ const checkEnrollment = async()=>{
             )}
             <Card.Body className="text-center">
               <h5 className="text-danger fw-bold">{course.tuitionFee.toLocaleString()} VNĐ</h5>
-              {!isHaveEnrollment ? <Button variant="primary" className="w-100 mb-3">
-                ĐĂNG KÝ HỌC
-              </Button>:
-              <Button variant="success" className="w-100 mb-3" onClick={()=>nav(`/courses/content/${course.id}`)}>
-                VÀO HỌC
-              </Button>
+              {user?.role == "teacher" ?
+                <>
+                  <div className="d-flex justify-content-center gap-2">
+
+                    <Button variant="success" className="w-100 mb-3" onClick={() => nav(`/courses/${course.id}/create-chapter`)}>
+                      Thêm chương
+                    </Button>
+                  </div>
+                  <Button variant="success" className="w-100 mb-3" onClick={() => nav(`/courses/update/${course.id}`)}>
+                    Chỉnh sửa
+                  </Button>
+                </>
+                :
+                <>
+                  {!isHaveEnrollment ? <Button variant="primary" className="w-100 mb-3">
+                    ĐĂNG KÝ HỌC
+                  </Button> :
+                    <Button variant="success" className="w-100 mb-3" onClick={() => nav(`/courses/content/${course.id}`)}>
+                      VÀO HỌC
+                    </Button>
+                  }
+                </>
               }
-              
+
+
               <ul className="list-unstyled text-start small">
                 <li>📌 Trình độ cơ bản</li>
                 <li>📚 Tổng số {course.chapters?.length || 0} chương</li>

@@ -14,7 +14,12 @@ export const endpoints = {
     'courses_details':(id)=>`/courses/${id}`,
     'courses_chaters':(id)=>`/secure/chapters?courseId=${id}`,
     'lesson_detail':(id)=>`/secure/lessons/${id}`,
-    'check_enrollment':(courseId,userId)=>`/secure/check_enrollment?courseId=${courseId}&userId=${userId}`
+    'check_enrollment':(courseId,userId)=>`/secure/check_enrollment?courseId=${courseId}&userId=${userId}`,
+    'my-course':(id)=>`/secure/my-course/${id}`,
+    'create_course':`/secure/courses`,
+    'secure-courses':`/secure/courses`,
+    "chapters":`/secure/chapters`,
+    "lessons":'/secure/lessons'
 }
 
 export const authApis = () => {

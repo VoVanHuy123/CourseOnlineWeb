@@ -12,11 +12,11 @@ const useFetchApi = () => {
       Authorization: `Bearer ${cookie.load("token") || null}`,
     };
 
-    // Nếu là FormData thì KHÔNG gán Content‑Type
-    if (!(data instanceof FormData)) {
-      headers["Content-Type"] = "application/json";
-    } else{
+    
+    if (data instanceof FormData) {
       headers['Content-Type']= 'multipart/form-data';
+    } else{
+      headers["Content-Type"] = "application/json";
                     
     }
 

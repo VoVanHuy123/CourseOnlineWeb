@@ -3,7 +3,7 @@ import Courses from "./Course/CoursesPage";
 
 const Home=()=>{
     return(<Container>
-    <Courses/>
+        <Courses/>
     </Container>);
 }
 export default Home;

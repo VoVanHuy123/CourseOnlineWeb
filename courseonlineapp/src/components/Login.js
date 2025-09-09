@@ -57,9 +57,21 @@ const Login = () => {
                         "type": "login",
                         "payload": u.data
                     });
+                    console.log(u.data)
                 }
                 let next = q.get('next')
-                nav(next === null ? "/" : next);
+                if(next){
+
+                    nav( next);
+                }else{
+                    if(u.data.role === "teacher"){
+                        nav("/teacher-home")
+                    }
+                    else{
+                        nav("/")
+                    }
+                }
+
             }
             else {
                 setErr(res.error)

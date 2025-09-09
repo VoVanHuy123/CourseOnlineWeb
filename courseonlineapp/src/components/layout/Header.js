@@ -2,6 +2,7 @@ import { Navbar, Nav, Container, Button, Dropdown, Image } from "react-bootstrap
 import { useContext } from "react";
 import { MyUserContext } from "../../Configs/Context";
 import { useNavigate } from "react-router-dom";
+import defaultAvater from "../../assets/image/defaultAvatar.png"
 
 const Header = () => {
   const [user, dispatch] = useContext(MyUserContext);
@@ -33,7 +34,7 @@ const Header = () => {
                 className="d-flex align-items-center border-0 shadow-sm rounded-pill"
               >
                 <Image
-                  src={user.avatar || "https://via.placeholder.com/40"}
+                  src={user.avatar || defaultAvater}
                   roundedCircle
                   width="40"
                   height="40"
@@ -43,7 +44,8 @@ const Header = () => {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={()=>nav("/")}>📘 Khóa học của tôi</Dropdown.Item>
+                <Dropdown.Item onClick={()=>nav("/")}>thông tin người dùng</Dropdown.Item>
+                <Dropdown.Item onClick={()=>nav("/my-courses")}>📘 Khóa học của tôi</Dropdown.Item>
                 <Dropdown.Divider />
                 <Dropdown.Item onClick={logout} className="text-danger">
                   🚪 Đăng xuất

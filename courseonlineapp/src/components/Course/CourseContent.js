@@ -27,7 +27,9 @@ const [chaptersData,setChaptersData] = useState([]);
         const res = await fetchApi({
             url:endpoints['lesson_detail'](lessonId)
         })
+        console.log(res.data)
         if(res.status===200) setSelectedLesson(res.data)
+
   };
 useEffect(()=>{
     loadChapters();
@@ -72,7 +74,7 @@ useEffect(()=>{
               <h3>{selectedLesson.title}</h3>
               <p>{selectedLesson.description}</p>
               {selectedLesson.videoUrl ? (
-                <video width="100%" controls>
+                <video key={selectedLesson.videoUrl} width="100%" controls>
                   <source src={selectedLesson.videoUrl} type="video/mp4" />
                 </video>
               ) : (

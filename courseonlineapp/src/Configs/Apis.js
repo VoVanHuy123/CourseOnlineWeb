@@ -19,7 +19,9 @@ export const endpoints = {
     'create_course':`/secure/courses`,
     'secure-courses':`/secure/courses`,
     "chapters":`/secure/chapters`,
-    "lessons":'/secure/lessons'
+    "lessons":'/secure/lessons',
+    'create_payment': '/secure/payments',
+    'create_enrollment': '/secure/enrollments'
 }
 
 export const authApis = () => {

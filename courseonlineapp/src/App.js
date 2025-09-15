@@ -13,6 +13,7 @@ import Register from './components/Register';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CourseDetails from './components/Course/CourseDetails';
 import CourseContent from './components/Course/CourseContent';
+import CoursePayments from './components/Course/CoursePayments';
 import PrivateRoute from './components/checkRoute/checkRoutes';
 import MyCourse from './components/student/MyCoursePage';
 import TeacherHome from './components/teacher/TeacherHomePage';
@@ -24,6 +25,7 @@ import ChapterDetail from './components/Chapter/ChapterDetails';
 import TeacherUpdateChapter from './components/teacher/TeacherUpdateChapter';
 import TeacherCreateLesson from './components/teacher/TeacherCreateLesson';
 import TeacherUpdateLesson from './components/teacher/TeacherUpdateLesson';
+
 
 function App() {
   const [user, dispatch] = useReducer(MyUserReducer, null);
@@ -46,6 +48,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/courses/:id" element={<CourseDetails />} />
+          <Route path="/courses/:id/payments" element={
+            <PrivateRoute allowedRoles={["student"]}>
+              <CoursePayments />
+            </PrivateRoute>
+          } />
           <Route path="/courses/content/:courseId" element={
             <PrivateRoute allowedRoles={["student"]}>
               <CourseContent />

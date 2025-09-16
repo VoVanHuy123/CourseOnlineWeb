@@ -20,6 +20,8 @@ export const endpoints = {
     'secure-courses':`/secure/courses`,
     "chapters":`/secure/chapters`,
     "lessons":'/secure/lessons',
+    'create_payment': '/secure/payments',
+    'create_enrollment': '/secure/enrollments'
     "get_course_lessons":(id)=>`/secure/getcourse/${id}/getlessons`,
     "complete_lesson":(id)=>`/secure/lessons/${id}/complete`,
     "get_course_progress":(id)=>`/secure/courses/${id}/get_progress`,
@@ -30,6 +32,7 @@ export const endpoints = {
     "delete_user":(id)=>`/secure/auth/users/${id}`,
     "get_teacher_course_create":`/secure/stats/teacher-courses-create`,
     "get_teacher_public_and_not_courses":`/secure/stats/teacher-courses`,
+
 }
 
 export const authApis = () => {

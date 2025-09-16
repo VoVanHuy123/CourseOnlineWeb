@@ -125,7 +125,8 @@ const CourseDetails = () => {
                 </>
                 :
                 <>
-                  {!isHaveEnrollment ? <Button variant="primary" className="w-100 mb-3">
+                  {!isHaveEnrollment ?
+                   <Button variant="primary" className="w-100 mb-3"onClick={() => nav(`/courses/${course.id}/payments`)}>
                     ĐĂNG KÝ HỌC
                   </Button> :
                     <Button variant="success" className="w-100 mb-3" onClick={() => {

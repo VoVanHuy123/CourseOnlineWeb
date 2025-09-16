@@ -14,6 +14,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import CourseDetails from './components/Course/CourseDetails';
 import CourseContent from './components/Course/CourseContent';
+import CoursePayments from './components/Course/CoursePayments';
 import PrivateRoute from './components/checkRoute/checkRoutes';
 import MyCourse from './components/student/MyCoursePage';
 import TeacherHome from './components/teacher/TeacherHomePage';
@@ -32,6 +33,7 @@ import StatsPage from './components/admin/StatsPage';
 import useFetchApi from './Configs/FetchApi';
 import { endpoints } from './Configs/Apis';
 import cookie from 'react-cookies';
+
 
 function App() {
   const [user, dispatch] = useReducer(MyUserReducer, null);
@@ -72,9 +74,15 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/courses/:id" element={<CourseDetails />} />
+
+          <Route path="/courses/:id/payments" element={
+            <PrivateRoute allowedRoles={["student"]}>
+              <CoursePayments />
+
           <Route path="/stats" element={
             <PrivateRoute allowedRoles={["admin"]}>
               <StatsPage />
+
             </PrivateRoute>
           } />
           <Route path="/courses/content/:courseId" element={

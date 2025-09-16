@@ -1,16 +1,17 @@
 import logo from './logo.svg';
 import './App.css';
-import { MyUserContext } from './Configs/Context';
-import { useReducer } from 'react';
+import { CurrentCourseContext, MyUserContext } from './Configs/Context';
+import { useEffect, useReducer } from 'react';
 import { MyUserReducer } from './components/Reducers/MyUserReducer';
 import Footer from './components/layout/Footer';
 import Header from './components/layout/Header';
 import { Container } from 'react-bootstrap';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap-icons/font/bootstrap-icons.css";
 import CourseDetails from './components/Course/CourseDetails';
 import CourseContent from './components/Course/CourseContent';
 import PrivateRoute from './components/checkRoute/checkRoutes';
@@ -24,14 +25,39 @@ import ChapterDetail from './components/Chapter/ChapterDetails';
 import TeacherUpdateChapter from './components/teacher/TeacherUpdateChapter';
 import TeacherCreateLesson from './components/teacher/TeacherCreateLesson';
 import TeacherUpdateLesson from './components/teacher/TeacherUpdateLesson';
+import { CurrentCourseReducer } from './components/Reducers/CurrentCourseReducer';
+import CourseEnrolledStudents from './components/teacher/CourseEnrolledStudents';
+import AdminHomePage from './components/admin/AdminHomePage';
+import StatsPage from './components/admin/StatsPage';
+import useFetchApi from './Configs/FetchApi';
+import { endpoints } from './Configs/Apis';
+import cookie from 'react-cookies';
 
 function App() {
   const [user, dispatch] = useReducer(MyUserReducer, null);
+  const [courseId, courseIdDispatch] = useReducer(CurrentCourseReducer, null);
   // const [cartCounter, cartDispatch] = useReducer(MyCartReducer, 0);
+  const { fetchApi } = useFetchApi();
 
+   useEffect(() => {
+    const token = cookie.load("token");
+    if (token) {
+      fetchApi({
+        method: "POST",
+        url: endpoints["profile"],
+      }).then((res) => {
+        if (res.status === 200 && res.data.isVerify) {
+          dispatch({ type: "login", payload: res.data });
+        } else {
+          cookie.remove("token"); // token cũ -> xoá
+        }
+      });
+    }
+  }, []);
   return (
 
     <MyUserContext.Provider value={[user, dispatch]}>
+      <CurrentCourseContext.Provider value = {[courseId, courseIdDispatch]}>
       {/* <MyCartContext.Provider value={[cartCounter, cartDispatch]}> */}
       <BrowserRouter>
         <Header />
@@ -40,12 +66,17 @@ function App() {
 
         <Routes>
           <Route path="/" element={<>
-          {user?.role == "teacher" ? <TeacherHome/>: <Home />}
+          {user?.role == "teacher" ? <TeacherHome/>: <>{user?.role == "admin" ? <AdminHomePage/>:<Home />}</>}
          
           </>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/courses/:id" element={<CourseDetails />} />
+          <Route path="/stats" element={
+            <PrivateRoute allowedRoles={["admin"]}>
+              <StatsPage />
+            </PrivateRoute>
+          } />
           <Route path="/courses/content/:courseId" element={
             <PrivateRoute allowedRoles={["student"]}>
               <CourseContent />
@@ -98,12 +129,18 @@ function App() {
               <TeacherUpdateLesson />
             </PrivateRoute>
           } />
+          <Route path="/courses/:courseId/students" element={
+            <PrivateRoute allowedRoles={["teacher"]}>
+              <CourseEnrolledStudents />
+            </PrivateRoute>
+          } />
           
         </Routes>
 
         <Footer />
       </BrowserRouter>
       {/* </MyCartContext.Provider> */}
+      </CurrentCourseContext.Provider>
     </MyUserContext.Provider>
   )
 }

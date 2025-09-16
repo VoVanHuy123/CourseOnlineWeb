@@ -7,36 +7,33 @@ import defaultCourseImg from '../../assets/image/defaultCourseImg.jpg'
 import { useNavigate, useSearchParams } from "react-router-dom";
 import '../../assets/css/style.css';
 
-const CoursesList = ({api,params}) => {
+const CoursesList = ({ api, params }) => {
   const [courses, setCourses] = useState([]);
   const [page, setPage] = useState(1);
-  const {loading,fetchApi  }= useFetchApi();
+  const { loading, fetchApi } = useFetchApi();
   const nav = useNavigate();
+  const [emptyMsg,setEmptyMsg]=useState("");
   // const {q} =useSearchParams();
   const loadCourses = async () => {
     try {
-    //   setLoading(true);
       let url = `${api}?page=${page}`;
+      if (params) {
+        Object.entries(params).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== "") {
+            url += `&${key}=${encodeURIComponent(value)}`;
+          }
+        });
+      }
+      console.log(url)
 
-      // let cate = q.get("cateId");
-      // if (cate) url = `${url}&cateId=${cate}`;
-
-      // param từ props
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== "") {
-          url += `&${key}=${encodeURIComponent(value)}`;
-        }
-      });
-    }
-    console.log(url)
-
-      let res = await fetchApi({url:url});
-
+      let res = await fetchApi({ url: url });
+      console.log("data: ",res.data)
       if (res.data.length > 0) {
         if (page === 1) setCourses(res.data);
         else setCourses([...courses, ...res.data]);
+        console.log(res)
       } else {
+        console.log(res)
         setPage(0);
       }
     } catch (ex) {
@@ -45,13 +42,15 @@ const CoursesList = ({api,params}) => {
     }
   };
 
+  
+
   useEffect(() => {
     if (page > 0) loadCourses();
-  }, [page]);
+  }, [page, params]);
 
-  // useEffect(() => {
-  //   setPage(1);
-  // }, [q]);
+  useEffect(() => {
+    setPage(1);
+  }, [params]);
 
   const loadMore = () => setPage(page + 1);
 
@@ -66,7 +65,7 @@ const CoursesList = ({api,params}) => {
       <Row className="g-4 mt-2 mb-4">
         {courses.map((c) => (
           <Col md={3} sm={6} xs={12} key={c.id}>
-            <Card onClick={()=>nav(`/courses/${c?.id}`)} className="h-100 shadow-sm rounded-3 course-card border border-light-subtle ">
+            <Card onClick={() => nav(`/courses/${c?.id}`)} className="h-100 shadow-sm rounded-3 course-card border border-light-subtle ">
               <div className="ratio ratio-16x9">
                 <Card.Img
                   src={c.imageUrl || defaultCourseImg}
@@ -85,7 +84,7 @@ const CoursesList = ({api,params}) => {
                   <span className="fw-bold text-danger">
                     {c.tuitionFee.toLocaleString()} VNĐ
                   </span>
-                  
+
                 </div>
               </Card.Body>
             </Card>

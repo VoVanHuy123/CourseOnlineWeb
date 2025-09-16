@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import useFetchApi from "../../Configs/FetchApi";
 import { endpoints } from "../../Configs/Apis";
 import defaultCourseImage from "../../assets/image/defaultCourseImg.jpg"
-import { MyUserContext } from "../../Configs/Context";
+import { CurrentCourseContext, MyUserContext } from "../../Configs/Context";
 
 const CourseDetails = () => {
   const { id } = useParams(); // 👈 lấy id từ URL
@@ -13,6 +13,8 @@ const CourseDetails = () => {
   const [user,] = useContext(MyUserContext);
   const [isHaveEnrollment, setIsHaveEnrollment] = useState(false);
   const nav = useNavigate();
+  const [courseId,courseIdDispatch] = useContext(CurrentCourseContext);
+  const [result, setResult] = useState(null);
 
   const loadCourse = async () => {
     const res = await fetchApi({
@@ -35,6 +37,14 @@ const CourseDetails = () => {
   useEffect(() => {
     loadCourse();
     checkEnrollment();
+    const loadResult = async () => {
+            const res = await fetchApi({
+                url: endpoints['get_course_progress'](courseId)
+            })
+            if (res.status == 200) setResult(res.data)
+            // console.log("REsdata: ", res.data)
+        };
+        loadResult();
   }, [])
   if (!course) return <p>Loading...</p>;
 
@@ -104,17 +114,27 @@ const CourseDetails = () => {
                     <Button variant="success" className="w-100 mb-3" onClick={() => nav(`/courses/${course.id}/create-chapter`)}>
                       Thêm chương
                     </Button>
+                    <Button variant="success" className="w-100 mb-3" onClick={() => {nav(`/courses/${course.id}/students`)}}>
+                      Thông tin đăng kí
+                    </Button>
                   </div>
                   <Button variant="success" className="w-100 mb-3" onClick={() => nav(`/courses/update/${course.id}`)}>
                     Chỉnh sửa
                   </Button>
+                  
                 </>
                 :
                 <>
                   {!isHaveEnrollment ? <Button variant="primary" className="w-100 mb-3">
                     ĐĂNG KÝ HỌC
                   </Button> :
-                    <Button variant="success" className="w-100 mb-3" onClick={() => nav(`/courses/content/${course.id}`)}>
+                    <Button variant="success" className="w-100 mb-3" onClick={() => {
+                      courseIdDispatch({
+                        type:"update",
+                        payload:course.id
+                      });
+                      nav(`/courses/content/${course.id}`)
+                      }}>
                       VÀO HỌC
                     </Button>
                   }
@@ -128,6 +148,20 @@ const CourseDetails = () => {
                 <li>⏳ Thời lượng {course.duration || "Chưa cập nhật"}</li>
                 <li>💻 Học mọi lúc, mọi nơi</li>
               </ul>
+               {user?.role == "student" && isHaveEnrollment  &&
+              <div className="w-full">
+                                <div className="progress" role="progressbar" aria-label="Success example" aria-valuenow={result ? (result.totalCompleteLessons / result.totalLessons * 100).toFixed(0) : 0} aria-valuemin="0" aria-valuemax="100">
+                                    <div
+                                        className="progress-bar text-bg-success"
+                                        style={{
+                                            width: result ? `${(result.totalCompleteLessons / result.totalLessons * 100).toFixed(0)}%` : "0%"
+                                        }}
+                                    >
+                                        {result ? `${(result.totalCompleteLessons / result.totalLessons * 100).toFixed(0)}%` : "0%"}
+                                    </div>
+                                </div>
+                            </div>
+}
             </Card.Body>
           </Card>
         </Col>

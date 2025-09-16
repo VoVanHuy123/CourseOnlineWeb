@@ -7,9 +7,8 @@ const PrivateRoute = ({ children, allowedRoles }) => {
     const [user,]= useContext(MyUserContext);
 
 
-//   }
   if (user == null) {
-    // return <Navigate to="/facecheck" replace />;
+    
     return <Navigate to="/login" replace />;
   }
 

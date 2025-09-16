@@ -18,12 +18,19 @@ const TeacherDrawerMenu = () => {
     onClick={handleShow}
     style={{
       position: "fixed",
-      top: "50%",
-      left: "0px",
-      zIndex: 1050
+    top: "50%",
+    left: "-3px",
+    transform: "translateY(-50%)", 
+    zIndex: 1050,
+    display: "flex",          
+    alignItems: "center",        
+    justifyContent: "center",    
+    gap: "5px",                   
+    padding: "8px 12px"        
     }}
   >
-    Menu
+    Menu  
+    <i class="bi bi-caret-right-square-fill"></i>
   </Button>
 )}
 

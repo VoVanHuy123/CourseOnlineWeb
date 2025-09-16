@@ -22,6 +22,17 @@ export const endpoints = {
     "lessons":'/secure/lessons',
     'create_payment': '/secure/payments',
     'create_enrollment': '/secure/enrollments'
+    "get_course_lessons":(id)=>`/secure/getcourse/${id}/getlessons`,
+    "complete_lesson":(id)=>`/secure/lessons/${id}/complete`,
+    "get_course_progress":(id)=>`/secure/courses/${id}/get_progress`,
+    "get_students_of_courses":(id)=>`/secure/get_ussers_of_course/${id}`,
+    "get_users":`/secure/auth/users`,
+    "update_user":(id)=>`/secure/auth/users/${id}`,
+    "delete_user":(id)=>`/secure/auth/users/${id}`,
+    "delete_user":(id)=>`/secure/auth/users/${id}`,
+    "get_teacher_course_create":`/secure/stats/teacher-courses-create`,
+    "get_teacher_public_and_not_courses":`/secure/stats/teacher-courses`,
+
 }
 
 export const authApis = () => {

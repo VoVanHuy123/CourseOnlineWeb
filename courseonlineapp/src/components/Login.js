@@ -2,7 +2,7 @@ import { Alert, Button, Card, Col, Container, Form, Row } from "react-bootstrap"
 import MySpinner from "./layout/MySpinner";
 import { useContext, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import  { endpoints } from "../Configs/Apis"
+import { endpoints } from "../Configs/Apis"
 import cookie from 'react-cookies'
 import { MyUserContext } from "../Configs/Context";
 import useFetchApi from "../Configs/FetchApi";
@@ -52,32 +52,41 @@ const Login = () => {
                     method: "POST",
                     url: endpoints["profile"],
                 })
-                if (res.status === 200) {
-                    dispatch({
-                        "type": "login",
-                        "payload": u.data
-                    });
+                if (u.status === 200) {
                     console.log(u.data)
-                }
-                let next = q.get('next')
-                if(next){
+                    if (u.data.isVerify == true) {
+                        
+                        dispatch({
+                            "type": "login",
+                            "payload": u.data
+                        });
 
-                    nav( next);
-                }else{
-                    if(u.data.role === "teacher"){
-                        nav("/teacher-home")
+                        let next = q.get('next')
+                        if (next) {
+
+                            nav(next);
+                        } else {
+                            if (u.data.role == "teacher") {
+                                nav("/teacher-home")
+                            }
+                            else {
+                                nav("/")
+                            }
+                        }
                     }
-                    else{
-                        nav("/")
+                    else {
+                        setErr("Người dùng chưa được xác thực")
                     }
                 }
 
-            }
-            else {
-                setErr(res.error)
-            }
+            }else {
+            setErr(res.error)
+        }
+
 
         }
+        
+
     }
 
     return (

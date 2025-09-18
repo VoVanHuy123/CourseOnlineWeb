@@ -27,7 +27,7 @@ const TeacherUpdateCourse= ()=>{
 }
         const res = await fetchApi({
             method: "PUT",
-            url : endpoints['create_course'],
+            url : endpoints['update_course'](course?.id),
             data : formData
         })
         if(res.status===200){

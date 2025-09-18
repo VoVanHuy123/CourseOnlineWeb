@@ -41,11 +41,13 @@ const TeacherDrawerMenu = () => {
         <Offcanvas.Body>
           <ListGroup variant="flush">
             <ListGroup.Item>
-              {user?.isVerify == false ? <Link className="nav-link"  onClick={()=>setShow(false)}>Cần được xác thực để tạo khóa học</Link>:<Link className="nav-link" to="/create-course" onClick={()=>setShow(false)}>Tạo khóa học</Link>}
+              {user?.isVerify == false ? <Link className="nav-link"  onClick={()=>setShow(false)}>Cần được xác thực để tạo khóa học</Link>
+              :
+              <Link className="nav-link" to="/create-course" onClick={()=>setShow(false)}><i class="bi bi-plus-square-fill"></i><span className=""> Tạo khóa học</span></Link>}
               
             </ListGroup.Item>
             <ListGroup.Item>
-              <Link className="nav-link" to="/teacher-home" onClick={()=>setShow(false)}>Khóa học của tôi</Link>
+              <Link className="nav-link" to="/teacher-home" onClick={()=>setShow(false)}><i class="bi bi-journal-bookmark-fill"></i> Khóa học của tôi</Link>
             </ListGroup.Item>
           </ListGroup>
         </Offcanvas.Body>

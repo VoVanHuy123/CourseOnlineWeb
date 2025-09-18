@@ -14,7 +14,7 @@ const CreateUpdateCourseForm = ({ onSubmit, course }) => {
         const handleDelete = async (course) => {
             const res = await fetchApi({
                 method : "DELETE",
-                url : `${endpoints['secure-courses']}/${course?.id}`
+                url : `${endpoints['delete_course']}/${course?.id}`
             })
             if(res.status == 204){
                 setShowDelete(false);

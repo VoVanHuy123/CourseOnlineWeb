@@ -46,11 +46,11 @@ const MainHeader = () => {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={()=>nav("/")}>thông tin người dùng</Dropdown.Item>
-                <Dropdown.Item onClick={()=>nav("/my-courses")}>📘 Khóa học của tôi</Dropdown.Item>
+                <Dropdown.Item onClick={()=>nav("/info")}><i class="bi bi-info-circle-fill"></i> Thông tin người dùng</Dropdown.Item>
+                <Dropdown.Item onClick={()=>nav("/my-courses")}><i class="bi bi-book-half"></i> Khóa học của tôi</Dropdown.Item>
                 <Dropdown.Divider />
                 <Dropdown.Item onClick={logout} className="text-danger">
-                  🚪 Đăng xuất
+                  <i class="bi bi-box-arrow-right"></i> Đăng xuất
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>

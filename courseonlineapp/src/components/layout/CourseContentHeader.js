@@ -1,7 +1,7 @@
 import { Navbar, Nav, Container, Button, Dropdown, Image } from "react-bootstrap";
 import { useContext, useEffect, useState } from "react";
 import { CurrentCourseContext, MyUserContext } from "../../Configs/Context";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import defaultAvater from "../../assets/image/defaultAvatar.png"
 import useFetchApi from "../../Configs/FetchApi";
 import { endpoints } from "../../Configs/Apis";
@@ -9,7 +9,8 @@ import { endpoints } from "../../Configs/Apis";
 const CourseContentHeader = () => {
     const [user, dispatch] = useContext(MyUserContext);
     const nav = useNavigate();
-    const [courseId, courseIdDispatch] = useContext(CurrentCourseContext);
+    // const [courseId, courseIdDispatch] = useContext(CurrentCourseContext);
+    const {courseId} = useParams();
     const [result, setResult] = useState(null);
     const { fetchApi } = useFetchApi();
 

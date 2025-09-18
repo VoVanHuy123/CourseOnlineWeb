@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { CurrentCourseContext, MyUserContext } from './Configs/Context';
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { MyUserReducer } from './components/Reducers/MyUserReducer';
 import Footer from './components/layout/Footer';
 import Header from './components/layout/Header';
@@ -33,6 +33,9 @@ import StatsPage from './components/admin/StatsPage';
 import useFetchApi from './Configs/FetchApi';
 import { endpoints } from './Configs/Apis';
 import cookie from 'react-cookies';
+import ChatBox from './components/chat/ChatBox';
+import ChatDrawer from './components/chat/ChatDrawer';
+import UserProfile from './components/Form/UserForm';
 
 
 function App() {
@@ -56,15 +59,57 @@ function App() {
       });
     }
   }, []);
+  // Quản lý cuộc trò chuyện được chọn
+  const [chatState, setChatState] = useState({
+    conversationId: null,
+    receiver: null,
+    open: false,
+    listOpen: false,
+  });
   return (
 
     <MyUserContext.Provider value={[user, dispatch]}>
       <CurrentCourseContext.Provider value = {[courseId, courseIdDispatch]}>
-      {/* <MyCartContext.Provider value={[cartCounter, cartDispatch]}> */}
       <BrowserRouter>
         <Header />
         {user?.role ==="teacher" ? <TeacherDrawerMenu/> :<></>}
         
+        <ChatDrawer
+          currentUser={user}
+          open={chatState.listOpen}
+          setOpen={(val) => setChatState((prev) => ({ ...prev, listOpen: val }))}
+          setChatState={setChatState}
+        />
+
+        <ChatBox
+          currentUser={user}
+          conversationId={chatState.conversationId}
+          receiver={chatState.receiver}
+          open={chatState.open}
+          setOpen={(val) => setChatState((prev) => ({ ...prev, open: val }))}
+        />
+
+        <button
+          onClick={() => setChatState((prev) => ({ ...prev, listOpen: true }))}
+          style={{
+            position: "fixed",
+            bottom: "20px",
+            right: "20px",
+            borderRadius: "50%",
+            backgroundColor: "#0d6efd",
+            color: "white",
+            border: "none",
+            width: "50px",
+            height: "50px",
+            fontSize: "20px",
+            cursor: "pointer",
+            boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+            zIndex: 1050,
+          }}
+        >
+          <i class="bi bi-chat-dots-fill"></i>
+        </button>
+
 
         <Routes>
           <Route path="/" element={<>
@@ -74,11 +119,12 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/courses/:id" element={<CourseDetails />} />
-
+          <Route path="/info" element={<UserProfile />} />
           <Route path="/courses/:id/payments" element={
             <PrivateRoute allowedRoles={["student"]}>
               <CoursePayments />
-
+             </PrivateRoute>
+          } />
           <Route path="/stats" element={
             <PrivateRoute allowedRoles={["admin"]}>
               <StatsPage />

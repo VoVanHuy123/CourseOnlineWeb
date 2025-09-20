@@ -255,11 +255,13 @@ import defaultAvatar from "../../assets/image/defaultAvatar.png";
 import ChatDrawerFloat from "../chat/ChatBox";
 import { getOrCreateConversation } from "../../Configs/filrebaseFunc";
 import ChatBox from "../chat/ChatBox";
+import ReviewList from "../review/ReviewList";
 
 const CourseDetails = () => {
   const { id } = useParams(); // 👈 lấy id từ URL
   const [course, setCourse] = useState(null);
   const [teacher, setTeacher] = useState(null);
+  const [reviews,setReviews]= useState([]);
   const { loading, fetchApi } = useFetchApi();
   const [user] = useContext(MyUserContext);
   const [isHaveEnrollment, setIsHaveEnrollment] = useState(false);
@@ -274,18 +276,15 @@ const CourseDetails = () => {
   // ✅ Bắt đầu chat
   const handleStartChat = async () => {
     if (!teacher?.id || !user?.id) {
-      console.warn("❌ Thiếu teacher.id hoặc user.id => Không thể tạo conversation");
       return;
     }
 
     try {
-      console.log("🔎 Creating/Getting conversation with:", teacher, user);
       const convoId = await getOrCreateConversation(
         { id: teacher.id, name: teacher.fullName, avatar: teacher.avatar },
         { id: user.id, name: `${user.first_name} ${user.last_name}`, avatar: user.avatar }
       );
 
-      console.log("✅ Conversation ID:", convoId);
       setSelectedConversation(convoId);
       setSelectedReceiver(teacher);
       setChatDrawerFloatOpen(true);
@@ -293,7 +292,16 @@ const CourseDetails = () => {
       console.error("❌ Lỗi khi tạo hoặc lấy conversation:", err);
     }
   };
-
+  const loadReviews = async () => {
+    console.log("Vaof laodReviews")
+    const res = await fetchApi({
+      url : endpoints['get_course_reviews'](id)
+    })
+    if(res.status===200){
+      setReviews(res.data);
+      console.log(res.data)
+    }
+  }
   const loadCourse = async () => {
     const res = await fetchApi({
       url: endpoints["courses_details"](id),
@@ -325,7 +333,7 @@ const CourseDetails = () => {
   useEffect(() => {
     loadCourse();
     checkEnrollment();
-
+    loadReviews();
     const loadResult = async () => {
       const res = await fetchApi({
         url: endpoints["get_course_progress"](id),
@@ -552,6 +560,7 @@ const CourseDetails = () => {
           )}
         </Col>
       </Row>
+          <ReviewList reviews={reviews} courseId={id}/>
 
       {/* Drawer chat */}
       <ChatBox

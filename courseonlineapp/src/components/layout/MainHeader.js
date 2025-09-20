@@ -42,7 +42,7 @@ const MainHeader = () => {
                   height="40"
                   className="me-2"
                 />
-                <span className="fw-semibold">{user.username}</span>
+                <span className="fw-semibold">{user.fullName}</span>
               </Dropdown.Toggle>
 
               <Dropdown.Menu>

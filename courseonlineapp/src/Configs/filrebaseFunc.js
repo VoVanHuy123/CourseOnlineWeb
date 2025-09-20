@@ -26,7 +26,7 @@ export const getOrCreateConversation = async (teacher, student) => {
     await setDoc(convoRef, {
       participants: [
         { id: teacher.id.toString(), name: teacher.name, avatar: teacher.avatar || null },
-        { id: student.id.toString(), name: student.name || `${student.f}`, avatar: student.avatar || null },
+        { id: student.id.toString(), name: student.name || `${student.firstName} ${student.lastName}`, avatar: student.avatar || null },
       ],
       participantIds: [teacher.id.toString(), student.id.toString()],
       lastMessage: "",

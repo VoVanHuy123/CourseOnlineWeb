@@ -33,6 +33,9 @@ export const endpoints = {
     "delete_user":(id)=>`/secure/auth/users/${id}`,
     "get_teacher_course_create":`/secure/stats/teacher-courses-create`,
     "get_teacher_public_and_not_courses":`/secure/stats/teacher-courses`,
+    "get_course_reviews":(id)=>`/courses/${id}/reviews`,
+    "create_review":`/secure/reviews`,
+    "update_delete_review":(id)=>`/secure/reviews/${id}`
 
 }
 

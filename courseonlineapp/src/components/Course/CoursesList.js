@@ -16,6 +16,7 @@ const CoursesList = ({ api, params }) => {
   // const {q} =useSearchParams();
   const loadCourses = async () => {
     try {
+      console.log("Vao")
       let url = `${api}?page=${page}`;
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
